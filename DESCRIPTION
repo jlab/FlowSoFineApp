@@ -12,11 +12,6 @@ LazyData: true
 biocViews:
 Imports:
   flowCore,
-  shinyWidgets,
-  shinyjs,
-  shinyFiles,
-  shinybusy,
-  shinyjqui,
   DT,
   FlowSoFine,
   ggplot2,
@@ -24,4 +19,9 @@ Imports:
   gridExtra 
 Depends: 
   shiny,
-  shinydashboard
+  shinydashboard,
+  shinyWidgets,
+  shinyjs,
+  shinyFiles,
+  shinybusy,
+  shinyjqui
