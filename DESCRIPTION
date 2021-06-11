@@ -10,12 +10,6 @@ License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 biocViews:
-Imports:
-  flowCore,
-  FlowSoFine,
-  ggplot2,
-  vegan, 
-  gridExtra 
 Depends: 
   shiny,
   shinydashboard,
@@ -24,5 +18,10 @@ Depends:
   shinyFiles,
   shinybusy,
   shinyjqui,
-  DT
+  DT,
+  flowCore,
+  FlowSoFine,
+  ggplot2,
+  vegan, 
+  gridExtra 
 
