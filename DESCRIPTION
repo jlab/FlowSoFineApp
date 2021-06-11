@@ -9,4 +9,18 @@ Description: More about what it does (maybe more than one line)
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
-Imports: flowCore, shiny, shinydashboard, shinyWidgets, shinyjs, shinyFiles, shinybusy, shinyjqui, DT, FlowSoFine, ggplot2, vegan, gridExtra 
+biocViews:
+Imports:
+  flowCore,
+  shinydashboard,
+  shinyWidgets,
+  shinyjs,
+  shinyFiles,
+  shinybusy,
+  shinyjqui,
+  DT,
+  FlowSoFine,
+  ggplot2,
+  vegan, 
+  gridExtra 
+Depends: shiny
