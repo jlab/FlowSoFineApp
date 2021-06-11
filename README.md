@@ -14,6 +14,7 @@ You can install the development version of FlowSoFine from GitHub with:
 
 ``` r
 library(devtools)
+install_github("JonasKup/FlowSoFine")
 install_github("JonasKup/FlowSoFineApp")
 ```
 
@@ -24,5 +25,5 @@ This is a basic example which shows you how to solve a common problem:
 ``` r
 library(FlowSoFineApp)
 
-launchAp()
+launchApp()
 ```
