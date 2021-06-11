@@ -12,7 +12,6 @@ LazyData: true
 biocViews:
 Imports:
   flowCore,
-  DT,
   FlowSoFine,
   ggplot2,
   vegan, 
@@ -24,4 +23,6 @@ Depends:
   shinyjs,
   shinyFiles,
   shinybusy,
-  shinyjqui
+  shinyjqui,
+  DT
+
