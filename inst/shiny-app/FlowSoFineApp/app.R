@@ -1,19 +1,3 @@
-#library(shiny)
-#library(shinydashboard)
-#library(shinyWidgets)
-#library(shinyjs)
-#library(shinyFiles)
-#library(shinybusy)
-#library(shinyjqui)
-#library(DT)
-
-#library(flowCore)
-#library(FlowSoFine)
-#library(ggplot2)
-#library(gridExtra)
-#library(vegan)
-#library(plotly)
-
 ui <- dashboardPage(
     dashboardHeader(disable = T, title = "FlowSoFine",
                     tags$li(class = "dropdown",
@@ -159,8 +143,6 @@ server <- function(input, output, session) {
 
         updateSelectInput(session, "ct", choices = names(comb), selected = tail(names(comb), 1))
 
-
-
     })
 
     observeEvent({
@@ -186,7 +168,7 @@ server <- function(input, output, session) {
         input$ct
         global$ND
         }, {
-        if(!is.null(global$ND)) {
+        if(!is.null(global$ND) & !(input$ct == "")) {
 
             channels <- colnames(global$ND@coords)
             comb <- lapply(1:(length(channels)-1), function(x) combn(channels, x, simplify = F))
