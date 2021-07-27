@@ -4,7 +4,7 @@
 #' @export
 #'
 #' @examples
-launchApp <- function() {
+launchApp <- function(...) {
   appDir <- system.file("shiny-app", "FlowSoFineApp", package = "FlowSoFineApp")
-  shiny::runApp(appDir, display.mode = "normal")
+  shiny::runApp(appDir, display.mode = "normal", ...)
 }
