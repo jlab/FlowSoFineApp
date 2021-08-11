@@ -42,7 +42,7 @@ nmdsTabServer <- function(id, global) {
           sendSweetAlert(
             session = session,
             title = "Warning",
-            text = "Need to calculate distance matrix first",
+            text = "Calculate distance matrix first",
             type = "warning"
           )
         }

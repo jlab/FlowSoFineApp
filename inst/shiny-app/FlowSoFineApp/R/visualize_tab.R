@@ -108,7 +108,7 @@ visualizeTabServer <- function(id, global) {
 
       observeEvent(global$ND, {
         #updateSelectInput(session, "sampleSelect", choices = colnames(global$ND@counts))
-        updateMultiInput(session, "channelInput", choices = colnames(global$ND@coords))
+        updateMultiInput(session, "channelInput", choices = colnames(global$ND@coords), selected = colnames(global$ND@coords)[1:2])
         updateSelectInput(session, "xChannel", choices = colnames(global$ND@coords))
         updateSelectInput(session, "yChannel", choices = colnames(global$ND@coords))
         updateSelectInput(session, "channel1CM", choices = colnames(global$ND@coords))

@@ -3,18 +3,19 @@ detailTabUI <- function(id) {
   ns <- NS(id)
   fluidPage(
     box(title = "Metadata:",
-        shinyFilesButton(ns('reloadFCS'),
-                         label='Reload fcs files',
-                         title='Select fcs files',
-                         multiple=T),
-        shinyFilesButton(ns('reloadCSV'),
-                         label='Reload metadata',
-                         title='Please select a csv file',
-                         multiple=F),
-        shinyFilesButton(ns('reloadDist'),
-                         label='Overwrite distance matrix',
-                         title='Please select a csv file',
-                         multiple=F),
+        # shinyFilesButton(ns('reloadFCS'),
+        #                  label='Reload fcs files',
+        #                  title='Select fcs files',
+        #                  multiple=T),
+
+        # shinyFilesButton(ns('reloadCSV'),
+        #                  label='Reload metadata',
+        #                  title='Please select a csv file',
+        #                  multiple=F),
+        # shinyFilesButton(ns('reloadDist'),
+        #                  label='Overwrite distance matrix',
+        #                  title='Please select a csv file',
+        #                  multiple=F),
         dataTableOutput(ns("metadataTable")),
         downloadButton(ns("metadataDownload"), "Download .csv")
         ),
@@ -35,7 +36,16 @@ detailTabUI <- function(id) {
                    downloadButton(ns("distDownload"), "Download .csv"))
         )
         #actionButton(ns("checkMetadata"), "Metadata")
-        )
+        ),
+    fileInput(ns("fcsFiles"), "Reload FCS Files",
+              multiple = TRUE,
+              accept = c(".fcs")),
+    fileInput(ns("csvFile"), "Reload metadata",
+              multiple = FALSE,
+              accept = c(".csv")),
+    fileInput(ns("distFile"), "Overwrite distance matrix",
+              multiple = FALSE,
+              accept = c(".csv"))
 
     ##add export buttons
   )
@@ -112,52 +122,72 @@ detailTabServer <- function(id, global) {
         }
       )
 
-      shinyFileChoose(input, "reloadFCS",
-                      roots = getVolumes(), filetype = "fcs")
+      # shinyFileChoose(input, "reloadFCS",
+      #                 roots = getVolumes(), filetype = "fcs")
 
-      shinyFileChoose(input, "reloadCSV",
-                      roots = getVolumes(), filetype = "csv")
+      # shinyFileChoose(input, "reloadCSV",
+      #                 roots = getVolumes(), filetype = "csv")
 
-      shinyFileChoose(input, "reloadDist",
-                      roots = getVolumes(), filetype = "csv")
+      # shinyFileChoose(input, "reloadDist",
+      #                 roots = getVolumes(), filetype = "csv")
 
-      observeEvent(input$reloadFCS, {
-        files <- parseFilePaths(roots = getVolumes(), input$reloadFCS)
-        if(nrow(files)) {
-          global$fcs <- read.flowSet(files$datapath)
+      # observeEvent(input$reloadFCS, {
+      #   files <- parseFilePaths(roots = getVolumes(), input$reloadFCS)
+      #   if(nrow(files)) {
+      #     global$fcs <- read.flowSet(files$datapath)
+      #
+      #     sendSweetAlert(
+      #       session = session,
+      #       title = "Warning",
+      #       text = "You need to manually recreate your template for this to take effect",
+      #       type = "warning"
+      #     )
+      #
+      #   }
+      # })
 
-          sendSweetAlert(
-            session = session,
-            title = "Warning",
-            text = "You need to manually recreate your template for this to take effect",
-            type = "warning"
-          )
+      observeEvent(input$fcsFiles, {
+        req(input$fcsFiles)
 
-        }
-      })
-
-
-      observeEvent(input$reloadDist, {
-
-        files <- parseFilePaths(roots = getVolumes(), input$reloadDist)
-        if(nrow(files)) {
-          global$distM <- as.dist(read.table(files$datapath, sep = ";", header = T, row.names = 1, dec = ","))
-          print(typeof(global$distM))
-          #global$distM <- as.dist(global$distM)
-          global$distanceString <- "OVERWRITTEN"
-        }
+        global$fcs <- read.flowSet(input$fcsFiles$datapath)
+        sampleNames(global$fcs) <- input$fcsFiles$name
 
       })
 
-      observeEvent(input$reloadCSV, {
+      observeEvent(input$csvFile, {
 
-        files <- parseFilePaths(roots = getVolumes(), input$reloadCSV)
-        if(nrow(files)) {
-          #global$metadataPath <- files$datapath
-          global$metadata <- read.table(files$datapath, sep = ";", header = T)
-        }
+        global$metadata <- read.table(input$csvFile$datapath, sep = ";", header = T)
 
       })
+
+      observeEvent(input$distFile, {
+
+        global$distM <- as.dist(read.table(input$distFile$datapath, sep = ";", header = T, row.names = 1, dec = ","))
+        global$distanceString <- "OVERWRITTEN"
+
+      })
+
+      # observeEvent(input$reloadDist, {
+      #
+      #   files <- parseFilePaths(roots = getVolumes(), input$reloadDist)
+      #   if(nrow(files)) {
+      #     global$distM <- as.dist(read.table(files$datapath, sep = ";", header = T, row.names = 1, dec = ","))
+      #     print(typeof(global$distM))
+      #     #global$distM <- as.dist(global$distM)
+      #     global$distanceString <- "OVERWRITTEN"
+      #   }
+      #
+      # })
+
+      # observeEvent(input$reloadCSV, {
+      #
+      #   files <- parseFilePaths(roots = getVolumes(), input$reloadCSV)
+      #   if(nrow(files)) {
+      #     #global$metadataPath <- files$datapath
+      #     global$metadata <- read.table(files$datapath, sep = ";", header = T)
+      #   }
+      #
+      # })
 
 
 

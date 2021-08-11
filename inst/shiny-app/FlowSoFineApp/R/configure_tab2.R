@@ -7,7 +7,7 @@ configureTabUI <- function(id) {
           box(title = "Configure the Template", width = "100%",
             multiInput(ns("channels"), "Select Channels:", choices = c("1","2"), options = list(enable_search = T)),
             sliderInput(ns("resolution"), label = "Resolution (number of bins on each axis):", min = 5,
-                        max = 500, value = 50),
+                        max = 200, value = 20),
             selectInput(ns("transFun"), label = "Transformation:",
                         choices = list("log10", "asinh", "no transformation"),
                         selected = 1),
@@ -25,12 +25,13 @@ configureTabUI <- function(id) {
       ),
       div(class = "col-sm-12 col-md-12 col-lg-6",
           box(title = "Configure distance Matrix", width = "100%",
-              selectInput(ns("distanceMetric"), label = "Distance Matrix:",
-                          choices = list("weightedBray" = 1, "vegdist" = 2)),
+              # selectInput(ns("distanceMetric"), label = "Distance Matrix:",
+              #             choices = list("weightedBray" = 1, "vegdist" = 2)),
 
-              conditionalPanel("input.distanceMetric == 2", ns = ns,
+              #conditionalPanel("input.distanceMetric == 2", ns = ns,
                                selectInput(ns("vegMethod"), "Metric:",
-                                           choices = c("manhattan",
+                                           choices = c("weighted bray",
+                                                      "manhattan",
                                                        "euclidean",
                                                        "canberra",
                                                        "clark",
@@ -46,10 +47,10 @@ configureTabUI <- function(id) {
                                                        "binomial",
                                                        "chao",
                                                        "cao",
-                                                       "mahalanobis"), selected = "bray"
-                               )
-              ),
-              conditionalPanel("input.distanceMetric == 1", ns = ns,
+                                                       "mahalanobis"), selected = "weighted bray"
+                               ),
+              #),
+              conditionalPanel("input.vegMethod == 'weighted bray'", ns = ns,
                 checkboxInput(ns("advanced"), "Advanced Settings"),
                 conditionalPanel("input.advanced == true", ns = ns,
                                  selectInput(ns("weightMethod"), label = "Method:",
@@ -61,9 +62,9 @@ configureTabUI <- function(id) {
                                  ),
                 conditionalPanel(condition = "input.weightMethod == 'disc'", ns = ns,
                                  textInput(ns("discInput"), label = "Values/Expression:", value = "c(1, 0.5, 0.5, 0.25)")
-                                 ),
+                                 )#,
 
-                plotOutput(ns("weightPlot"))
+                #plotOutput(ns("weightPlot"))
 
               ),
 
@@ -112,8 +113,8 @@ configureTabServer <- function(id, global) {
                                     transformation = trFun)
 
           #save template in project path
-          b <- global$ND#reactiveValuesToList(global)
-          saveRDS(b, file = paste0(global$projectPath,"/","template.rds"))
+          #b <- global$ND#reactiveValuesToList(global)
+          #saveRDS(b, file = paste0(global$projectPath,"/","template.rds"))
 
         } else {
 
@@ -168,7 +169,7 @@ configureTabServer <- function(id, global) {
 
       observeEvent(input$distanceButton, {
         if(!is.null(global$template)) {
-          if(input$distanceMetric == 1) {
+          if(input$vegMethod == "weighted bray") {
             if(nrow(global$template@counts) <= 1000) {
               loc$weightMatrix <- FlowSoFine::weightMatrix(global$template,
                                                            gamma = input$gamma,
@@ -177,7 +178,7 @@ configureTabServer <- function(id, global) {
                                                                       )
                                                            )
               global$distM <- FlowSoFine::weightedBray(global$template, w = loc$weightMatrix)
-              global$distanceString <- paste0("WeightedBray, gamma = ", input$gamma)
+              global$distanceString <- paste0("Weighted bray, gamma = ", input$gamma)
             } else {
               sendSweetAlert(
                 session = session,
@@ -189,19 +190,19 @@ configureTabServer <- function(id, global) {
             }
           } else {
             global$distM <- vegan::vegdist(frequencies(global$template), method = input$vegMethod)
-            global$distanceString <- paste0("vegdist, method = ", input$vegMethod)
+            global$distanceString <- paste0(input$vegMethod)
           }
         }
       })
 
-      output$weightPlot <- renderPlot({
-
-        if((!is.null(loc$weightMatrix)) & (!is.null(global$distM)) & (ncol(global$template@coords) == 2)) {
-          middle <- nrow(global$template@counts)/2
-          plot(global$template, mapping = aes(fill = loc$weightMatrix[,middle]))
-        }
-
-      })
+      # output$weightPlot <- renderPlot({
+      #
+      #   if((!is.null(loc$weightMatrix)) & (!is.null(global$distM)) & (ncol(global$template@coords) == 2)) {
+      #     middle <- nrow(global$template@counts)/2
+      #     plot(global$template, mapping = aes(fill = loc$weightMatrix[,middle]))
+      #   }
+      #
+      # })
 
 
 

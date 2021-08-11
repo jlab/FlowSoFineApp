@@ -2,7 +2,7 @@
 projectsTabUI <- function(id) {
   ns <- NS(id)
   fluidPage(
-    h1("FlowSoFine - A cool slogan here!"),
+    h1("FlowSoFine"),
     fluidRow(align = "center",
              div(id=ns('clickNewProj'), style = "cursor: pointer",
                  infoBox("Create",
@@ -20,7 +20,12 @@ projectsTabUI <- function(id) {
                          width = 6,
                          color = "aqua")
              ),
-             shinyDirButton(ns("dirBut"),"select directory", "select directory", style = "visibility: hidden")
+             shinyjs::hidden(
+               fileInput(ns("dirBut"), "Choose a Project File",
+                         multiple = FALSE,
+                         accept = c(".RData"))
+             )
+             #shinyDirButton(ns("dirBut"),"select directory", "select directory", style = "visibility: hidden")
 
     )
   )
@@ -35,34 +40,47 @@ projectsTabServer <- function(id, global, parent_session) {
 
       onclick("clickLoadProj", click("dirBut"))
 
-      shinyDirChoose(input, "dirBut", roots = getVolumes()())
+      #shinyDirChoose(input, "dirBut", roots = getVolumes()())
+
 
       observeEvent(input$dirBut, {
 
-        dir <- parseDirPath(roots = getVolumes(), input$dirBut)
-        global$projectPath <- dir
-        if (length(dir)) {
+        req(input$dirBut)
 
-          hexF <- paste0(dir,"/","template.rds")
-          infoF <- paste0(dir,"/","info.rds")
+        load(input$dirBut$datapath, loadingEnv <- new.env())
+        isolate(global$ND <- loadingEnv$ND)
+        isolate(global$template <- global$ND)
+        global$distM <- loadingEnv$distM
+        global$distanceString <- loadingEnv$distanceString
+        global$metadata <- loadingEnv$metadata
+        global$title <- loadingEnv$title
 
-          if(file.exists(hexF)) {
-            global$ND <- readRDS(hexF)
-          }
+        global$justLoaded <- TRUE
 
-          if(file.exists(infoF)) {
-            info <- readRDS(infoF)
-            global$title <- info[[1]]
-            global$metadata <- info[[2]]
-            #global$projectPath <- info[[2]]
-          }
+        # dir <- parseDirPath(roots = getVolumes(), input$dirBut)
+        # global$projectPath <- dir
+        # if (length(dir)) {
+        #
+        #   hexF <- paste0(dir,"/","template.rds")
+        #   infoF <- paste0(dir,"/","info.rds")
+        #
+        #   if(file.exists(hexF)) {
+        #     global$ND <- readRDS(hexF)
+        #   }
+        #
+        #   if(file.exists(infoF)) {
+        #     info <- readRDS(infoF)
+        #     global$title <- info[[1]]
+        #     global$metadata <- info[[2]]
+        #     #global$projectPath <- info[[2]]
+        #   }
 
-          runjs("$('header').css('display', '');")
+        runjs("$('header').css('display', '');")
 
-          updateTabItems(session = parent_session, "tabs",
-                         selected = "4_configureProject")
+        updateTabItems(session = parent_session, "tabs",
+                       selected = "4_configureProject")
 
-        }
+        #}
       })
 
 

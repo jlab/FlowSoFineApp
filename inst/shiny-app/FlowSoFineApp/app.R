@@ -1,3 +1,5 @@
+options(shiny.maxRequestSize = 100*1024^2)
+
 ui <- dashboardPage(
     dashboardHeader(disable = T, title = "FlowSoFine",
                     tags$li(class = "dropdown",
@@ -7,11 +9,15 @@ ui <- dashboardPage(
                                        color = "primary"),
                             ),
                     tags$li(class = "dropdown",
-                            actionBttn("helpButton",
-                                       icon = icon("info-circle"),
-                                       style = "simple",
-                                       color = "primary"
-                                       ),
+                            # actionBttn("helpButton",
+                            #            icon = icon("save"),
+                            #            style = "simple",
+                            #            color = "primary"
+                            #            )
+                            downloadBttn("saveDownload",
+                                         label = "",
+                                         style = "simple",
+                                         color = "primary")
 
                             ),
                     tags$li(class = "dropdown",
@@ -100,9 +106,11 @@ ui <- dashboardPage(
             tabItem("11_impressum", impressumTabUI("impressumTab")),
             tabItem("12_detail", detailTabUI("detailTab"))
         ),
-        actionButton("helpClick","help",
-                     onclick ="window.open('https://github.com/AG-ESSER/HexTemplatesFCS/', '_blank')",
-                     style = "visibility: hidden")
+
+        #,
+        # actionButton("helpClick","help",
+        #              onclick ="window.open('https://github.com/AG-ESSER/HexTemplatesFCS/', '_blank')",
+        #              style = "visibility: hidden")
     )
 )
 
@@ -116,17 +124,63 @@ server <- function(input, output, session) {
     global$distM <- NULL
     global$wM <- list()
 
-    global$projectPath <- NULL
-    global$fcsPath <- NULL
+    #global$projectPath <- NULL
+    #global$fcsPath <- NULL
     global$title <- "NONE"
     global$distanceString <- "NONE"
     global$templateString <- "NONE"
+
+    global$justLoaded <- FALSE
 
 
     observeEvent(input$homeButton, updateTabItems(session, "tabs",
                                                   selected = "5_hub"))
 
-    observeEvent(input$helpButton, click("helpClick"))
+    # observeEvent(input$helpButton, {
+    #     b <- list()
+    #     b["template"] <- global$template
+    #     b["title"] <- global$title
+    #     b["metadata"] <- global$metadata
+    #     b["distance_matrix"] <- global$distM
+    #     b["distance_string"] <- global$distanceString
+    #     #saveRDS(b, file = paste0(global$projectPath,"/","info.rds"))
+    # })#click("helpClick"))
+
+    output$saveDownload <- downloadHandler(
+        filename = function() {
+            paste0(global$title, "-FlowSoFine-", Sys.Date(), ".RData")
+        },
+        content = function(con) {
+            # b <- list()
+            # b["template"] <- global$ND
+            # b["title"] <- global$title
+            # b["metadata"] <- global$metadata
+            # b["distance_matrix"] <- global$distM
+            # b["distance_string"] <- global$distanceString
+            ND <- global$ND
+            title <- global$title
+            metadata <- global$metadata
+            if(identical(global$ND, global$template)) {
+                distM <- global$distM
+                distanceString <- global$distanceString
+            } else {
+                distM <- NULL
+                distanceString <- "NONE"
+                sendSweetAlert(
+                    session = session,
+                    title = "Warning",
+                    text = "Subset of the max dimensional template is currently active. Distance matrix will not be saved.",
+                    type = "warning")
+            }
+
+            save(ND,
+                 title,
+                 metadata,
+                 distM,
+                 distanceString,
+                 file = con)
+        }
+    )
 
     output$title <- renderText({
             paste0( "- Title: ",global$title, " - Template: ", global$templateString, " - Distance Matrix: ", global$distanceString)
@@ -149,15 +203,20 @@ server <- function(input, output, session) {
         global$ND
         global$template
     }, {
-        global$distM <- NULL
-        global$distanceString <- "NONE"
+        if(global$justLoaded == FALSE) {
+            global$distM <- NULL
+            global$distanceString <- "NONE"
 
-        sendSweetAlert(
-            session = session,
-            title = "Warning",
-            text = "Remember to (re)calculate the distance Matrix",
-            type = "warning"
-        )
+            sendSweetAlert(
+                session = session,
+                title = "Warning",
+                text = "Remember to (re)calculate the distance Matrix",
+                type = "warning"
+            )
+        } else {
+            global$justLoaded <- FALSE
+        }
+
     })
 
     observeEvent(global$template, {

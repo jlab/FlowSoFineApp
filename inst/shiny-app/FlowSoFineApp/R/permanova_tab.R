@@ -28,15 +28,19 @@ permanovaTabUI <- function(id) {
         #                                          "mahalanobis"), selected = "bray"
         #                  )
         # ),
-        selectInput(ns("pairwiseChoose"), label = "Select:", choices = c("standard", "pairwise"), selected = "standard"),
-        conditionalPanel("input.pairwiseChoose == 'standard'",ns = ns,
-          selectInput(ns("byChoose"), label = "Test by:", choices = c("terms", "margin")),
-          uiOutput(ns("metaUI"))
-
-        ),
-        conditionalPanel("input.pairwiseChoose == 'pairwise'", ns = ns,
-                         selectInput(ns("pwChoose"), label = "Term:", choices = c(1,2))
-                         ),
+        # selectInput(ns("pairwiseChoose"), label = "Select:", choices = c("standard", "pairwise"), selected = "standard"),
+        # conditionalPanel("input.pairwiseChoose == 'standard'",ns = ns,
+        #   selectInput(ns("byChoose"), label = "Test by:", choices = c("terms", "margin")),
+        #   uiOutput(ns("metaUI"))
+        #
+        # ),
+        # conditionalPanel("input.pairwiseChoose == 'pairwise'", ns = ns,
+        #                  selectInput(ns("pwChoose"), label = "Term:", choices = c(1,2))
+        #                  ),
+        selectInput(ns("pwChoose"), label = "Term:", choices = c(1,2)),
+        selectInput(ns("adjustChoose"), label = "Adjustment method",
+                    choices =  c("holm", "hochberg", "hommel", "bonferroni", "BH", "BY","fdr", "none"),
+                    selected = "bonferroni"),
         actionBttn(ns("calculate"), "(Re)calculate", style = "simple", color = "primary")
         ),
 
@@ -70,23 +74,23 @@ permanovaTabServer <- function(id, global) {
         #   distM <- vegan::vegdist(frequencies(global$template), method = input$vegMethod)
         # }
         if(!is.null(global$distM)) {
-          if(input$pairwiseChoose == "standard") {
-            distM <- global$distM
-            response <- "distM ~"
-            terms <- paste(input$dest_order$text, collapse = "+")
-            form <- formula(paste(response, terms, collapse = " "))
-            #loc$form <- input$dest_order
-            loc$adonis <- adonis2(form, data = global$metadata, by = input$byChoose)
-          } else {
+          # if(input$pairwiseChoose == "standard") {
+          #   distM <- global$distM
+          #   response <- "distM ~"
+          #   terms <- paste(input$dest_order$text, collapse = "+")
+          #   form <- formula(paste(response, terms, collapse = " "))
+          #   #loc$form <- input$dest_order
+          #   loc$adonis <- adonis2(form, data = global$metadata, by = input$byChoose)
+          # } else {
             loc$pressed <- T
             #distM <- global$distM
             #loc$adonis <- capture.output(pw.adonis2(distM, term = input$pwChoose, data = global$metadata))
-          }
+          #}
         } else {
           sendSweetAlert(
             session = session,
             title = "Warning",
-            text = "Need to calculate distance matrix first",
+            text = "Calculate distance matrix first",
             type = "warning"
           )
         }
@@ -95,38 +99,55 @@ permanovaTabServer <- function(id, global) {
       })
 
       output$adonis <- renderPrint({
-        if(input$pairwiseChoose == "standard") {
-          loc$adonis
-        } else {
-          if(loc$pressed) {pw.adonis2(global$distM, term = input$pwChoose, data = global$metadata)}
-        }
+        #if(input$pairwiseChoose == "standard") {
+        #  loc$adonis
+        #} else {
+          if(loc$pressed) {
+            term <- input$pwChoose
+            meta <- global$metadata
+            cc <- complete.cases(meta[,term])
+            metaCC <- meta[cc,]
+            distM <- as.matrix(global$distM)[cc, cc]
+
+            if (!identical(meta, metaCC)) {
+              sendSweetAlert(
+                session = session,
+                title = "Warning",
+                text = "NAs removed in metadata",
+                type = "warning"
+              )
+            }
+
+            pw.adonis2(as.dist(distM), term = term, data = metaCC, adjust = input$adjustChoose)
+            }
+        #}
         #loc$form
       })
 
-      observe(
-        if(!is.null(global$template)) {
-          s <- apply(global$metadata, 2, function(x) length(unique(x)) > 1)
-
-          # m <- sapply(1:ncol(global$metadata), function(x) {
-          #   if(length(unique(global$metadata [,x])) > 1) {
-          #     return(x)
-          #   }
-          #   return(0)
-          #   }) #only metadata groups with more than one unique level
-
-          names <- colnames(global$metadata[,s])
-
-          output$metaUI <- renderUI({
-            ns = session$ns
-            div(
-              orderInput(ns("source"), "Metadata groups:", items = names,
-                         as_source = F, connect = "permanovaTab-dest"),
-              orderInput(ns("dest"), "To be analyzed:", items = NULL, placeholder = "Drag metadata groups here...",
-                         connect = "permanovaTab-source")
-            )
-          })
-        }
-      )
+      # observe(
+      #   if(!is.null(global$template)) {
+      #     s <- apply(global$metadata, 2, function(x) length(unique(x)) > 1)
+      #
+      #     # m <- sapply(1:ncol(global$metadata), function(x) {
+      #     #   if(length(unique(global$metadata [,x])) > 1) {
+      #     #     return(x)
+      #     #   }
+      #     #   return(0)
+      #     #   }) #only metadata groups with more than one unique level
+      #
+      #     names <- colnames(global$metadata[,s])
+      #
+      #     output$metaUI <- renderUI({
+      #       ns = session$ns
+      #       div(
+      #         orderInput(ns("source"), "Metadata groups:", items = names,
+      #                    as_source = F, connect = "permanovaTab-dest"),
+      #         orderInput(ns("dest"), "To be analyzed:", items = NULL, placeholder = "Drag metadata groups here...",
+      #                    connect = "permanovaTab-source")
+      #       )
+      #     })
+      #   }
+      # )
 
     }
   )
