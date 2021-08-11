@@ -18,16 +18,16 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of FlowSoFineApp is to ...
+FlowSoFineApp provides a Shiny user interface for the FlowSoFine package for flow cytometry.
 
 ## Installation
 
-You can install the development version of FlowSoFine from GitHub with:
+You can install the development version of FlowSoFineApp from GitHub with:
 
 ``` r
-library(devtools)
-install_github("JonasKup/FlowSoFine")
-install_github("JonasKup/FlowSoFineApp")
+install.packages("remotes")
+remotes::install_github("JonasKup/FlowSoFine")
+remotes::install_github("JonasKup/FlowSoFineApp")
 ```
 
 ## Example
