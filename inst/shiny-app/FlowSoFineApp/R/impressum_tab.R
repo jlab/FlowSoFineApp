@@ -3,7 +3,7 @@ impressumTabUI <- function(id) {
   fluidPage(
     h1("Authors"),
     fluidRow(
-      column(1,
+      column(4,
         tags$a(
           tags$img(src = "iuf_logo.jpg", style = "box-shadow: 0 .5px 1px 0 rgba(0, 0, 0, 0.2), 0 .75px 2.5px 0 rgba(0, 0, 0, 0.19);",
                    width = "150px", height = "160px"),
@@ -12,7 +12,7 @@ impressumTabUI <- function(id) {
           style="display:block;padding:10px; width: 150px;",
         )
       ),
-      column(2,
+      column(10,
         tags$p(tags$b("AG Esser"), style = "margin-left: 10px; margin-top: 15px"),
         tags$p(tags$b("Jonas Kupschus"), style = "margin-left: 10px"),
         tags$p(tags$b("Dr. Katrin Hochrath"), style = "margin-left: 10px"),
@@ -28,8 +28,8 @@ impressumTabUI <- function(id) {
           style="display:block;padding:10px; width: 581px;"
         )
       ),
-      column(2,
-        tags$p(tags$b("Jonathan Rathjens"), style = "margin-left: -25px; margin-top: 15px"),
+      column(10,
+        tags$p(tags$b("Jonathan Rathjens"), style = "margin-left: 10px; margin-top: 15px"),
       )
     ),
     fluidRow(
@@ -42,8 +42,8 @@ impressumTabUI <- function(id) {
           style="display:block;padding:10px; width: 565px;"
         )
       ),
-      column(2,
-        tags$p(tags$b("Prof. Dr. Stefan Janssen"), style = "margin-left: -25px; margin-top: 15px"),
+      column(10,
+        tags$p(tags$b("Prof. Dr. Stefan Janssen"), style = "margin-left: 10px; margin-top: 15px"),
       )
     )
   )

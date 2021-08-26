@@ -52,6 +52,7 @@ visualizeTabUI <- function(id) {
                                      max = 300, value = 50, step = 5)
         ),
 
+        checkboxInput(ns("coordFlipCheck"), "Flip coordinates"),
         checkboxInput(ns("limitCheck"), "Define color scale limits"),
         conditionalPanel("input.limitCheck == true", ns = ns,
                          sliderInput(ns("limitSlider"), label = "Limits", min = 0,
@@ -130,7 +131,7 @@ visualizeTabServer <- function(id, global) {
           if(input$plotType == "Template (1-2 Channels)") {
 
             #if(length(input$channelInput) <= 2) {
-              if(!is.null(input$metaTable_row_last_clicked)) {
+              if(!is.null(input$metaTable_row_last_clicked) & !is.null(input$channelInput)) {
 
                 temp <- shrink(global$ND, c(input$channelInput))
 
@@ -153,6 +154,10 @@ visualizeTabServer <- function(id, global) {
                   p <- p + geom_text(aes(label = lab), size = input$fontsize)
                 }
 
+                if(input$coordFlipCheck) {
+                  p <- p + coord_flip()
+                }
+
                 p
               }
             #}
@@ -160,7 +165,6 @@ visualizeTabServer <- function(id, global) {
           } else if(input$plotType == "FlowFrame Plot") {
 
             if(!is.null(global$fcs)) {
-              #if(input$xChannelF != input$yChannelF) {
 
                 if(input$transFun == "no transformation") {
                   trFun = NULL
@@ -168,17 +172,19 @@ visualizeTabServer <- function(id, global) {
                   trFun = get(input$transFun)
                 }
 
-                plotFF(global$fcs[[input$metaTable_row_last_clicked]],
-                     #x = input$xChannelF,
-                     #y = input$yChannelF,
-                     channels = input$channelInputF,
-                     transformation = trFun,
-                     resolution = input$resolution,
-                     limits = loc$limits)
+                p <- plotFF(global$fcs[[input$metaTable_row_last_clicked]],
+                            channels = input$channelInputF,
+                            transformation = trFun,
+                            resolution = input$resolution,
+                            limits = loc$limits)
+
+                if(input$coordFlipCheck) {
+                  p <- p + coord_flip()
+                }
+
+                p
 
 
-
-              #}
             }
 
           } else if(input$plotType == "Multiplot") {

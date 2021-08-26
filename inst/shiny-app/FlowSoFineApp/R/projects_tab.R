@@ -7,7 +7,7 @@ projectsTabUI <- function(id) {
              div(id=ns('clickNewProj'), style = "cursor: pointer",
                  infoBox("Create",
                          subtitle = tags$p("New Project", style = "font-size: 200%;"),
-                         icon = icon("star"),
+                         icon = icon("microscope"),
                          width = 6,
                          color = "aqua")
              )),

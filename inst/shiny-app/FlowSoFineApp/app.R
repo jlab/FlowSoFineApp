@@ -38,6 +38,7 @@ ui <- dashboardPage(
             menuItem("Visualize", tabName = "6_visualize", icon = icon("paint-brush")),
             menuItem("t-Scores", tabName = "7_tscores", icon = icon("braille")),
             menuItem("NMDS", tabName = "8_nmds", icon = icon("project-diagram")),
+            menuItem("Beta dispersion", tabName = "13_betadisper", icon = icon("spinner")),
             menuItem("PERMANOVA", tabName = "9_permanova", icon = icon("diaspora")),
             menuItem("Details/Export", tabName = "12_detail", icon = icon("search")),
             menuItem("Authors", tabName = "11_impressum", icon = icon("align-left"))
@@ -79,38 +80,24 @@ ui <- dashboardPage(
                 width: auto !important;
             }'),
         useShinyjs(),
-        #verbatimTextOutput("bla", placeholder = T),
-        # tags$a(
-        #     tags$img(src = "logo.jpg", style = "position: absolute; bottom: 1em; right: 1em;
-        #              box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);",
-        #              width = "150px", height = "160px"),
-        #     href = "https://www.iuf-duesseldorf.de/",
-        #     target = "_blank"
-        #     ),
-        # add_busy_gif(
-        #     src = "https://media1.giphy.com/media/xUA7aYT5gSnwd3oiCQ/giphy.gif?cid=ecf05e47090c6c7be7cedd933ffeea1797175fad8a495e67&rid=giphy.gif",
-        #     height = 70, width = 70
-        # ),
+
         add_busy_spinner(spin = "breeding-rhombus" ,color = "#323232", timeout = 600, position = "top-right",
                          margins = c(70,30)),
 
         tabItems(
             tabItem("1_projects", projectsTabUI("projTab")),
-            tabItem("2_newProject", newProjectTabUI("newProjTab")), #load files
-            tabItem("4_configureProject", configureTabUI("configureTab")), #create HexTemplate
+            tabItem("2_newProject", newProjectTabUI("newProjTab")),
+            tabItem("4_configureProject", configureTabUI("configureTab")),
             tabItem("5_hub", hubTabUI("hubTab")),
             tabItem("6_visualize", visualizeTabUI("visualizeTab")),
             tabItem("7_tscores", tscoresTabUI("tscoresTab")),
             tabItem("8_nmds", nmdsTabUI("nmdsTab")),
             tabItem("9_permanova", permanovaTabUI("permanovaTab")),
             tabItem("11_impressum", impressumTabUI("impressumTab")),
-            tabItem("12_detail", detailTabUI("detailTab"))
+            tabItem("12_detail", detailTabUI("detailTab")),
+            tabItem("13_betadisper", betadisperTabUI("betadisperTab"))
         ),
 
-        #,
-        # actionButton("helpClick","help",
-        #              onclick ="window.open('https://github.com/AG-ESSER/HexTemplatesFCS/', '_blank')",
-        #              style = "visibility: hidden")
     )
 )
 
@@ -136,27 +123,12 @@ server <- function(input, output, session) {
     observeEvent(input$homeButton, updateTabItems(session, "tabs",
                                                   selected = "5_hub"))
 
-    # observeEvent(input$helpButton, {
-    #     b <- list()
-    #     b["template"] <- global$template
-    #     b["title"] <- global$title
-    #     b["metadata"] <- global$metadata
-    #     b["distance_matrix"] <- global$distM
-    #     b["distance_string"] <- global$distanceString
-    #     #saveRDS(b, file = paste0(global$projectPath,"/","info.rds"))
-    # })#click("helpClick"))
-
     output$saveDownload <- downloadHandler(
         filename = function() {
             paste0(global$title, "-FlowSoFine-", Sys.Date(), ".RData")
         },
         content = function(con) {
-            # b <- list()
-            # b["template"] <- global$ND
-            # b["title"] <- global$title
-            # b["metadata"] <- global$metadata
-            # b["distance_matrix"] <- global$distM
-            # b["distance_string"] <- global$distanceString
+
             ND <- global$ND
             title <- global$title
             metadata <- global$metadata
@@ -166,11 +138,13 @@ server <- function(input, output, session) {
             } else {
                 distM <- NULL
                 distanceString <- "NONE"
+
                 sendSweetAlert(
                     session = session,
                     title = "Warning",
                     text = "Subset of the max dimensional template is currently active. Distance matrix will not be saved.",
                     type = "warning")
+
             }
 
             save(ND,
@@ -188,6 +162,7 @@ server <- function(input, output, session) {
 
 
     observeEvent(global$ND, {
+
         channels <- colnames(global$ND@coords)
         comb <- lapply(1:(length(channels)-1), function(x) combn(channels, x, simplify = F))
         comb <- c(comb, list(list(channels)))
@@ -200,8 +175,10 @@ server <- function(input, output, session) {
     })
 
     observeEvent({
+
         global$ND
         global$template
+
     }, {
         if(global$justLoaded == FALSE) {
             global$distM <- NULL
@@ -220,7 +197,7 @@ server <- function(input, output, session) {
     })
 
     observeEvent(global$template, {
-        global$templateString <- paste0(nrow(global$template@counts), " bins, ", ncol(global$template@counts), " samples")
+        global$templateString <- paste0(global$template@resolution, " resolution, ", ncol(global$template@counts), " samples")
     })
 
     observeEvent({
@@ -243,7 +220,6 @@ server <- function(input, output, session) {
 
     projectsTabServer("projTab", global, parent_session = session)
     newProjectTabServer("newProjTab", global, parent_session = session)
-    #rearrangeDataTabServer("rearrangeTab", global)
     configureTabServer("configureTab", global)
     hubTabServer("hubTab", parent_session = session)
     visualizeTabServer("visualizeTab", global)
@@ -252,6 +228,7 @@ server <- function(input, output, session) {
     permanovaTabServer("permanovaTab", global)
     impressumTabServer("impressumTab")
     detailTabServer("detailTab", global)
+    betadisperTabServer("betadisperTab", global)
 }
 
 shinyApp(ui = ui, server = server)

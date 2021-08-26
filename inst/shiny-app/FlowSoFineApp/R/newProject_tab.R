@@ -24,6 +24,8 @@ newProjectTabUI <- function(id) {
     ),
     fluidRow(
       box(title = "Load metadata .csv file",
+          textInput(ns("sepText"), label = "sep:", value = ";"),
+          textInput(ns("decText"), label = "dec:", value = ","),
           # shinyFilesButton(ns('loadCSV'),
           #                  label='File select',
           #                  title='Please select a file',
@@ -72,7 +74,10 @@ newProjectTabServer <- function(id, global, parent_session) {
 
       observeEvent(input$csvFile, {
 
-        global$metadata <- read.table(input$csvFile$datapath, sep = ";", header = T)
+        global$metadata <- read.csv(input$csvFile$datapath,
+                                      sep = input$sepText,
+                                      dec = input$decText,
+                                      header = T)
         # files <- parseFilePaths(roots = getVolumes(), input$loadCSV)
         # if(nrow(files)) {
         #   #global$metadataPath <- files$datapath
@@ -164,7 +169,6 @@ newProjectTabServer <- function(id, global, parent_session) {
           #fl <- as.list(global$fcs@frames)
           #fl <- names(fl)[order(names(fl))]
           fl <- input$fcsFiles$name
-          print(fl)
           if(length(fl) == nrow(global$metadata)) {
             cbind(fl, global$metadata)
           } else {
