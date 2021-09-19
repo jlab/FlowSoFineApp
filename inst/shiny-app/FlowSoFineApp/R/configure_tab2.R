@@ -15,12 +15,7 @@ configureTabUI <- function(id) {
                        label = "(Step 1) Build Template",
                        style = "simple",
                        color = "primary"),
-            # actionBttn(ns('checkButton'),
-            #            label = "Check for optimal resolution",
-            #            style = "simple",
-            #            color = "primary"),
-            #selectInput(ns("ct"), label = "Template to analyze:", choices = NULL),
-            #plotOutput(ns("checkPlot"), height = "600px")
+
           )
       ),
       div(class = "col-sm-12 col-md-12 col-lg-6",

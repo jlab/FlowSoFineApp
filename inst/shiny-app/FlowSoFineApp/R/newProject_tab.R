@@ -5,9 +5,7 @@ newProjectTabUI <- function(id) {
     fluidRow(
       box(title = "Title",
         textInput(ns("projName"), "Name of the project:", "untitled"),
-        #tags$b("Project directory:"),
-        #verbatimTextOutput(ns("dirText"), placeholder = T),
-        #shinyDirButton(ns("changeDir"),"Select Directory", "Select Directory")
+
       )
     ),
     fluidRow(
@@ -24,16 +22,17 @@ newProjectTabUI <- function(id) {
     ),
     fluidRow(
       box(title = "Load metadata .csv file",
-          textInput(ns("sepText"), label = "sep:", value = ";"),
-          textInput(ns("decText"), label = "dec:", value = ","),
-          # shinyFilesButton(ns('loadCSV'),
-          #                  label='File select',
-          #                  title='Please select a file',
-          #                  multiple=F),
+
+          checkboxInput(ns("csvOptions"), label = "Edit CSV options"),
+
+          conditionalPanel("input.csvOptions == true", ns = ns,
+            textInput(ns("sepText"), label = "separator:", value = ";"),
+            textInput(ns("decText"), label = "decimal point:", value = ",")
+          ),
+
           fileInput(ns("csvFile"), "Choose CSV File",
                     multiple = FALSE,
                     accept = c(".csv")),
-          #div(id = ns("check2"), icon("check"), style = "color: green;"),
       )
     ),
 
@@ -48,41 +47,12 @@ newProjectTabServer <- function(id, global, parent_session) {
     id,
     function(input, output, session) {
 
-      # output$dirText <- renderText({
-      #   if(is.null(global$projectPath)) {
-      #     global$projectPath <- getwd()
-      #   }
-      #   global$projectPath
-      # })
-
-      # shinyFileChoose(input, "loadFCS",
-      #                 roots = getVolumes(), filetype = "fcs")
-      #
-      # shinyFileChoose(input, "loadCSV",
-      #                 roots = getVolumes(), filetype = "csv")
-      #
-      # shinyDirChoose(input, "changeDir",
-      #                roots = getVolumes()())
-      #
-      # observeEvent(input$loadFCS, {
-      #   files <- parseFilePaths(roots = getVolumes(), input$loadFCS)
-      #     if(nrow(files)) {
-      #       global$fcsPath <- files$datapath
-      #       #global$fcs <- read.flowSet(files$datapath)
-      #     }
-      #   })
-
       observeEvent(input$csvFile, {
 
         global$metadata <- read.csv(input$csvFile$datapath,
                                       sep = input$sepText,
                                       dec = input$decText,
                                       header = T)
-        # files <- parseFilePaths(roots = getVolumes(), input$loadCSV)
-        # if(nrow(files)) {
-        #   #global$metadataPath <- files$datapath
-        #   global$metadata <- read.table(files$datapath, sep = ";", header = T)
-        # }
 
       })
 
@@ -133,20 +103,6 @@ newProjectTabServer <- function(id, global, parent_session) {
         updateTabItems(session = parent_session, "tabs",
                        selected = "4_configureProject")
 
-        # if(!is.null(global$metadata) & !is.null(global$fcsPath)) {
-        #   #global$metadata <- read.table(global$metadataPath, sep = ";", header = T)
-        #   global$fcs <- read.flowSet(global$fcsPath)
-        #   global$title <- input$projName
-        #   b <- list()
-        #   b[[1]] <- global$title
-        #   b[[2]] <- global$metadata
-        #   saveRDS(b, file = paste0(global$projectPath,"/","info.rds"))
-        #
-        #   runjs("$('header').css('display', '');")
-        #
-        #   updateTabItems(session = parent_session, "tabs",
-        #                  selected = "4_configureProject")
-        # }
       })
 
       observeEvent(input$checkLinking, {

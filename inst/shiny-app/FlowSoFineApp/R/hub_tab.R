@@ -5,11 +5,11 @@ hubTabUI <- function(id) {
 
     fluidRow(
       div(style = "cursor: pointer", id = ns("configure"),
-          infoBox("configure", "Configure", icon =  icon("cogs"))
+          infoBox("configure", "Configure", icon =  icon("cogs"), color = "teal")
       ),
 
       div(style = "cursor: pointer", id = ns("export"),
-          infoBox("export", "Details & Export", icon =  icon("search"))
+          infoBox("export", "Details & Export", icon =  icon("search"), color = "teal")
       )
     ),
 
@@ -19,14 +19,14 @@ hubTabUI <- function(id) {
 
 
       div(style = "cursor: pointer", id = ns("visualize"),
-          infoBox("inspect and visualize samples", "Sample Inspector", icon =  icon("paint-brush"), color = "black")
+          infoBox("inspect and visualize samples", "Sample Inspector", icon =  icon("paint-brush"), color = "navy")
       ),
       div(style = "cursor: pointer", id = ns("tscores"),
-          infoBox("Visualize population shifts", "t-Scores", icon =  icon("braille"), color = "black")
+          infoBox("Visualize population shifts", "t-Scores", icon =  icon("braille"), color = "navy")
       )
     ),
 
-    h3("Distance matrix based"),
+    h3("Distance matrix based (vegan)"),
 
     fluidRow(
 
@@ -37,14 +37,14 @@ hubTabUI <- function(id) {
           infoBox("Test for beta dispersion", "Beta dispersion", icon =  icon("spinner"))
       ),
       div(style = "cursor: pointer", id = ns("permanova"),
-          infoBox("Perform pairwise adonis2", "PERMANOVA", icon =  icon("asterisk"))
+          infoBox("Perform (pairwise) adonis2", "PERMANOVA", icon =  icon("asterisk"))
       )
     ),
 
     h3("Authors"),
     fluidRow(
       div(style = "cursor: pointer", id = ns("authors"),
-          infoBox("authors", "Authors", icon =  icon("at"), color = "black")
+          infoBox("authors", "Authors", icon =  icon("at"), color = "blue")
       )
     ),
   )

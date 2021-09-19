@@ -39,7 +39,7 @@ ui <- dashboardPage(
             menuItem("t-Scores", tabName = "7_tscores", icon = icon("braille")),
             menuItem("NMDS", tabName = "8_nmds", icon = icon("project-diagram")),
             menuItem("Beta dispersion", tabName = "13_betadisper", icon = icon("spinner")),
-            menuItem("PERMANOVA", tabName = "9_permanova", icon = icon("diaspora")),
+            menuItem("PERMANOVA", tabName = "9_permanova", icon = icon("asterisk")),
             menuItem("Details/Export", tabName = "12_detail", icon = icon("search")),
             menuItem("Authors", tabName = "11_impressum", icon = icon("align-left"))
 
@@ -111,8 +111,6 @@ server <- function(input, output, session) {
     global$distM <- NULL
     global$wM <- list()
 
-    #global$projectPath <- NULL
-    #global$fcsPath <- NULL
     global$title <- "NONE"
     global$distanceString <- "NONE"
     global$templateString <- "NONE"

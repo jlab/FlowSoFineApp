@@ -32,18 +32,7 @@ tscoresTabUI <- function(id) {
     box(title = "t-scores:",
         DT::dataTableOutput(ns("tscoresTable")),
         downloadButton(ns("tscoreDownload"), "Download .csv")
-        )#,
-    # box(title = "Detect Gates:",
-    #     numericInput(ns("thresh"), "Threshold:", value = 5, min = 0),
-    #     numericInput(ns("minT"), "min t-score entry point:", value = 1),
-    #     numericInput(ns("tryO"), "Tries for best configuration:", value = 10),
-    #     numericInput(ns("nM"), "Hexagon distance to check:", value = 2),
-    #     numericInput(ns("conc"), "Concavity:", value = 3.5),
-    #     textInput(ns("tSeed"), "Seed:"),
-    #     actionBttn(ns("detectGates"),"Detect Gates", style = "simple", color = "primary"),
-    #     plotOutput(ns("tGatesPlot"), height = "600px"),
-    #     verbatimTextOutput(ns("yo"), placeholder = T)
-    #     )
+        )
   )
 }
 
@@ -92,27 +81,6 @@ tscoresTabServer <- function(id, global) {
 
       })
 
-      observeEvent(input$detectGates, {
-          # plots$seed <- capture.output(gates <- detectGates(global$hexT,
-          #                      plots$ts[,input$indexG],
-          #                      thresh = input$thresh,
-          #                      minT = input$minT,
-          #                      tryO = input$tryO,
-          #                      nM = input$nM,
-          #                      conc = input$conc,
-          #                      tSeed = as.numeric(input$tSeed)))
-          #
-          # psf <- st_polygon(gates)
-          #
-          # plots$gatesPlot <- plot_tscores(global$hexT, plots$ts[,input$indexG], color = NA) +
-          #   geom_sf(data = psf, fill = NA) +
-          #   labs(x = global$hexT@xChannel, y = global$hexT@yChannel)
-        })
-
-      output$yo <- renderPrint({
-        loc$seed
-      })
-
       output$tscoresPlot <- renderPlot({
 
           if(input$textCheck) {
@@ -146,9 +114,6 @@ tscoresTabServer <- function(id, global) {
         }
       )
 
-      output$tGatesPlot <- renderPlot({
-        #loc$gatesPlot
-      })
 
     }
   )
