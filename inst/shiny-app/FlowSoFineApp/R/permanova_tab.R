@@ -41,7 +41,7 @@ permanovaTabServer <- function(id, global) {
 
       observeEvent(global$metadata, {
 
-        s <- apply(global$metadata, 2, \(x) {
+        s <- apply(global$metadata, 2, function(x) {
           length(unique(x)) > 1 & !anyNA(x)
         }) #only groups with more than one unique entry AND no missing values (no reasonable way to use complete.cases with dynamic formula)
 
