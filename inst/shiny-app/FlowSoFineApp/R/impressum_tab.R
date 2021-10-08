@@ -45,6 +45,20 @@ impressumTabUI <- function(id) {
       column(10,
         tags$p(tags$b("Prof. Dr. Stefan Janssen"), style = "margin-left: 10px; margin-top: 15px"),
       )
+    ),
+    fluidRow(
+      column(4,
+        tags$a(
+          tags$img(src = "denbi-logo-color.svg", style = "box-shadow: 0 .5px 1px 0 rgba(0, 0, 0, 0.2), 0 .75px 2.5px 0 rgba(0, 0, 0, 0.19); background-color: white;",
+                   width = "300px"),
+          href =  "https://www.denbi.de/",
+          target = "_blank",
+          style="display:block;padding:10px; width: 300px;"
+        )
+      ),
+      column(10,
+        tags$p(tags$b("We thank the de.NBI initiative for providing online compute resources."), style = "margin-left: 10px; margin-top: 15px"),
+      )
     )
   )
 }
