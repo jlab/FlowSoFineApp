@@ -1,0 +1,6 @@
+## build docker image for FlowSoFineApp
+ - sudo docker build -t stefanjanssen/flowsofine:shinyapp -f Dockerfile . 
+
+## push docker image to dockerhub
+ - sudo docker login -u stefanjanssen
+ - sudo docker push stefanjanssen/flowsofine:shinyapp
