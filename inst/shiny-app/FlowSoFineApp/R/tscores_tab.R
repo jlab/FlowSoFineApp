@@ -23,7 +23,7 @@ tscoresTabUI <- function(id) {
         ),
 
         circle = TRUE, status = "success",
-        icon = icon("gear"), width = "300px",
+        icon = icon("cogs"), width = "300px",
 
         tooltip = tooltipOptions(title = "Configure Plot")
         ),

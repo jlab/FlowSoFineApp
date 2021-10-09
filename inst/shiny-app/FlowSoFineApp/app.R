@@ -9,11 +9,6 @@ ui <- dashboardPage(
                                        color = "primary"),
                             ),
                     tags$li(class = "dropdown",
-                            # actionBttn("helpButton",
-                            #            icon = icon("save"),
-                            #            style = "simple",
-                            #            color = "primary"
-                            #            )
                             downloadBttn("saveDownload",
                                          label = "",
                                          style = "simple",
@@ -35,7 +30,7 @@ ui <- dashboardPage(
             div(menuItem("New Project", tabName = "2_newProject"), style = "display: none"),
             menuItem("Hub", tabName = "5_hub", icon = icon("th")),
             menuItem("Configure", tabName = "4_configureProject", icon = icon("cogs")),
-            menuItem("Visualize", tabName = "6_visualize", icon = icon("paint-brush")),
+            menuItem("Sample Viewer", tabName = "6_visualize", icon = icon("paint-brush")),
             menuItem("t-Scores", tabName = "7_tscores", icon = icon("braille")),
             menuItem("NMDS", tabName = "8_nmds", icon = icon("project-diagram")),
             menuItem("Beta dispersion", tabName = "13_betadisper", icon = icon("spinner")),
@@ -218,7 +213,7 @@ server <- function(input, output, session) {
 
     projectsTabServer("projTab", global, parent_session = session)
     newProjectTabServer("newProjTab", global, parent_session = session)
-    configureTabServer("configureTab", global)
+    configureTabServer("configureTab", global, parent_session = session)
     hubTabServer("hubTab", parent_session = session)
     visualizeTabServer("visualizeTab", global)
     tscoresTabServer("tscoresTab", global)

@@ -1,7 +1,7 @@
 visualizeTabUI <- function(id) {
   ns <- NS(id)
   fluidPage(
-    h1("Visualize"),
+    h1("Sample Viewer"),
 
     box(
       title = tags$b("Plot"),
@@ -61,19 +61,12 @@ visualizeTabUI <- function(id) {
 
 
         circle = TRUE, status = "danger",
-        icon = icon("gear"), width = "300px",
+        icon = icon("cogs"), width = "300px",
 
         tooltip = tooltipOptions(title = "Configure Plot")
       ),
       plotOutput(ns("mainPlot"), height = "600px")
-      #conditionalPanel("(input.channelInput.length <= 2) || !(input.plotType == 'Template (1-3 Channels)')", ns = ns,
-      #                 plotOutput(ns("mainPlot"), height = "600px")
 
-      #),
-      #conditionalPanel("(input.channelInput.length == 3) && (input.plotType == 'Template (1-3 Channels)')", ns = ns,
-      #                 plotlyOutput(ns("mainPlot2"), height = "600px")
-
-      #),
 
     ),
     box(
@@ -108,7 +101,6 @@ visualizeTabServer <- function(id, global) {
       })
 
       observeEvent(global$ND, {
-        #updateSelectInput(session, "sampleSelect", choices = colnames(global$ND@counts))
         updateMultiInput(session, "channelInput", choices = colnames(global$ND@coords), selected = colnames(global$ND@coords)[1:2])
         updateSelectInput(session, "xChannel", choices = colnames(global$ND@coords))
         updateSelectInput(session, "yChannel", choices = colnames(global$ND@coords))
@@ -121,16 +113,13 @@ visualizeTabServer <- function(id, global) {
 
       observeEvent(global$fcs, {
         updateSelectInput(session, "channelInputF", choices = colnames(global$fcs))
-        #updateSelectInput(session, "yChannelF", choices = colnames(global$fcs))
       })
 
       output$mainPlot <- renderPlot({
-        #for ggplot
         if(!is.null(global$ND)) {
 
           if(input$plotType == "Template (1-2 Channels)") {
 
-            #if(length(input$channelInput) <= 2) {
               if(!is.null(input$metaTable_row_last_clicked) & !is.null(input$channelInput)) {
 
                 temp <- shrink(global$ND, c(input$channelInput))
@@ -160,7 +149,6 @@ visualizeTabServer <- function(id, global) {
 
                 p
               }
-            #}
 
           } else if(input$plotType == "FlowFrame Plot") {
 
@@ -193,7 +181,6 @@ visualizeTabServer <- function(id, global) {
               if(length(input$metaTableMulti_rows_selected) > 0) {
                 channels <- c(input$xChannel, input$yChannel)
                 t2 <- shrink(global$ND, channels)
-                #maxim <- max(log10(t2@counts))
                 glist <- lapply(input$metaTableMulti_rows_selected, function(x) {
                   plot(t2, x, limits = loc$limits) +
                     theme(legend.position = "none", text = element_text(size = 8))
@@ -221,16 +208,6 @@ visualizeTabServer <- function(id, global) {
         }
       })
 
-      # output$mainPlot2 <- renderPlotly({
-      #   #for plotly
-      #   if(!is.null(global$ND)) {
-      #     if(input$plotType == "Template (1-3 Channels)") {
-      #       if(length(input$channelInput) == 3) {
-      #         plot(shrink(global$ND, c(input$channelInput)), input$sampleSelect)
-      #       }
-      #     }
-      #   }
-      # })
 
       output$metaTable <- renderDT({
         if(!is.null(global$metadata)) global$metadata
