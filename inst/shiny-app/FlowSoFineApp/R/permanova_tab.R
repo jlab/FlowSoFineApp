@@ -51,6 +51,7 @@ permanovaTabServer <- function(id, global) {
 
       observeEvent(input$calculatePW, {
         req(global$distM)
+        req(input$pwChoose)
 
         loc$pwAD <- capture.output(pw.adonis2(global$distM,
                                               term = input$pwChoose,
@@ -61,6 +62,7 @@ permanovaTabServer <- function(id, global) {
 
       observeEvent(input$calculateAD, {
         req(global$distM)
+        req(input$formulaChoose)
 
         distM <- global$distM
         response <- "distM ~"
