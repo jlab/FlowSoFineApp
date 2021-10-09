@@ -10,29 +10,25 @@ newProjectTabUI <- function(id) {
     ),
     fluidRow(
       box(title = "Load .fcs files",
-        # shinyFilesButton(ns('loadFCS'),
-        #                  label='File select',
-        #                  title='Select fcs files',
-        #                  multiple=T),
+
         fileInput(ns("fcsFiles"), "Choose FCS Files",
                   multiple = TRUE,
                   accept = c(".fcs")),
-        #div(id = ns("check1"), icon("check"), style = "color: green;")#,
       )
     ),
     fluidRow(
-      box(title = "Load metadata .csv file",
+      box(title = "Load metadata .csv or .tsv file",
 
-          checkboxInput(ns("csvOptions"), label = "Edit CSV options"),
+          checkboxInput(ns("csvOptions"), label = "File settings"),
 
           conditionalPanel("input.csvOptions == true", ns = ns,
-            textInput(ns("sepText"), label = "separator:", value = ";"),
+            textInput(ns("sepText"), label = "seperator:", value = ";"),
             textInput(ns("decText"), label = "decimal point:", value = ",")
           ),
 
-          fileInput(ns("csvFile"), "Choose CSV File",
+          fileInput(ns("csvFile"), "Choose CSV or TSV File",
                     multiple = FALSE,
-                    accept = c(".csv")),
+                    accept = c(".csv", ".tsv")),
       )
     ),
 
@@ -49,9 +45,14 @@ newProjectTabServer <- function(id, global, parent_session) {
 
       observeEvent(input$csvFile, {
 
-        global$metadata <- read.csv(input$csvFile$datapath,
-                                      sep = input$sepText,
-                                      dec = input$decText,
+        sepText <- input$sepText
+        decText <- input$decText
+
+        if (sepText == "\\t") sepText <- "\t"
+
+        global$metadata <- read.table(input$csvFile$datapath,
+                                      sep = sepText,
+                                      dec = decText,
                                       header = T)
 
       })
@@ -67,18 +68,6 @@ newProjectTabServer <- function(id, global, parent_session) {
       })
 
       observe({
-
-        # if(!is.null(global$fcsPath)) {
-        #   shinyjs::show("check1")
-        # } else {
-        #   shinyjs::hide("check1")
-        # }
-        #
-        # if(!is.null(global$metadata)) {
-        #   shinyjs::show("check2")
-        # } else {
-        #   shinyjs::hide("check2")
-        # }
 
         if (!is.null(input$csvFile) & !is.null(input$fcsFiles)) {
           shinyjs::show("createButton")
@@ -122,8 +111,6 @@ newProjectTabServer <- function(id, global, parent_session) {
 
       output$table <- renderTable({
 
-          #fl <- as.list(global$fcs@frames)
-          #fl <- names(fl)[order(names(fl))]
           fl <- input$fcsFiles$name
           if(length(fl) == nrow(global$metadata)) {
             cbind(fl, global$metadata)
