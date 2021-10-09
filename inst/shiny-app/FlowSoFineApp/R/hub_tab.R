@@ -19,7 +19,7 @@ hubTabUI <- function(id) {
 
 
       div(style = "cursor: pointer", id = ns("visualize"),
-          infoBox("inspect and visualize samples", "Sample Inspector", icon =  icon("paint-brush"), color = "navy")
+          infoBox("inspect and visualize samples", "Sample Viewer", icon =  icon("paint-brush"), color = "navy")
       ),
       div(style = "cursor: pointer", id = ns("tscores"),
           infoBox("Visualize population shifts", "t-Scores", icon =  icon("braille"), color = "navy")
