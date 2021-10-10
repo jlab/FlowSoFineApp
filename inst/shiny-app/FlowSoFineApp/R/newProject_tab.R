@@ -57,6 +57,9 @@ newProjectTabServer <- function(id, global, parent_session) {
                                       sep = sepText,
                                       dec = decText,
                                       header = T)
+
+          global$metadata[global$metadata == ""] <- NA #replace empty strings with NA for nmds plot
+
         } else {
 
           shinyjs::reset("csvFile")
