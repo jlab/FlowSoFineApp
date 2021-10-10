@@ -64,7 +64,7 @@ newProjectTabServer <- function(id, global, parent_session) {
           sendSweetAlert(
             session = session,
             title = "!",
-            text = "Only .csv, .tsv or .txt files",
+            text = "Uploaded file is not a .csv, .tsv or .txt file",
             type = "error"
           )
 
@@ -97,7 +97,7 @@ newProjectTabServer <- function(id, global, parent_session) {
           sendSweetAlert(
             session = session,
             title = "!",
-            text = "Only valid .fcs files",
+            text = "Uploaded files are not .fcs files",
             type = "error"
           )
 
@@ -110,8 +110,10 @@ newProjectTabServer <- function(id, global, parent_session) {
         if (!is.null(global$metadata) & !is.null(input$fcsFiles)) {
 
           if(nrow(global$metadata) == nrow(input$fcsFiles)) {
+
             shinyjs::show("createButton")
             shinyjs::show("checkLinking")
+
           } else {
 
             sendSweetAlert(
