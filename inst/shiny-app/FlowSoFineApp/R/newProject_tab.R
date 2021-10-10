@@ -26,9 +26,9 @@ newProjectTabUI <- function(id) {
             textInput(ns("decText"), label = "decimal point:", value = ",")
           ),
 
-          fileInput(ns("csvFile"), "Choose CSV or TSV File",
+          fileInput(ns("csvFile"), "Choose metadata file (csv, tsv, txt)",
                     multiple = FALSE,
-                    accept = c(".csv", ".tsv")),
+                    accept = c(".csv", ".tsv", ".txt")),
       )
     ),
 
@@ -50,37 +50,32 @@ newProjectTabServer <- function(id, global, parent_session) {
 
         if (sepText == "\\t") sepText <- "\t"
 
-        global$metadata <- read.table(input$csvFile$datapath,
+        if (any(endsWith(input$csvFile$datapath, c(".csv", ".tsv", ".txt")))) {
+
+
+          global$metadata <- read.table(input$csvFile$datapath,
                                       sep = sepText,
                                       dec = decText,
                                       header = T)
-
-      })
-
-      observeEvent(input$changeDir, {
-
-        dir <- parseDirPath(roots = getVolumes(), input$changeDir)
-
-        if (length(dir)) {
-          global$projectPath <- dir
-        }
-
-      })
-
-      observe({
-
-        if (!is.null(input$csvFile) & !is.null(input$fcsFiles)) {
-          shinyjs::show("createButton")
-          shinyjs::show("checkLinking")
         } else {
-          shinyjs::hide("createButton")
-          shinyjs::hide("checkLinking")
+
+          shinyjs::reset("csvFile")
+
+          sendSweetAlert(
+            session = session,
+            title = "!",
+            text = "Only .csv, .tsv or .txt files",
+            type = "error"
+          )
+
         }
+
       })
 
       observeEvent(input$createButton, {
         req(input$fcsFiles)
         req(input$csvFile)
+
 
         global$fcs <- read.flowSet(input$fcsFiles$datapath)
         sampleNames(global$fcs) <- input$fcsFiles$name
@@ -91,6 +86,47 @@ newProjectTabServer <- function(id, global, parent_session) {
 
         updateTabItems(session = parent_session, "tabs",
                        selected = "4_configureProject")
+
+      })
+
+      observeEvent(input$fcsFiles, {
+        req(input$fcsFiles)
+        if (!all(endsWith(input$fcsFiles$datapath, ".fcs"))) {
+          shinyjs::reset("fcsFiles")
+
+          sendSweetAlert(
+            session = session,
+            title = "!",
+            text = "Only valid .fcs files",
+            type = "error"
+          )
+
+        }
+
+      })
+
+      observe({
+
+        if (!is.null(global$metadata) & !is.null(input$fcsFiles)) {
+
+          if(nrow(global$metadata) == nrow(input$fcsFiles)) {
+            shinyjs::show("createButton")
+            shinyjs::show("checkLinking")
+          } else {
+
+            sendSweetAlert(
+              session = session,
+              title = "!",
+              text = "Number of rows in the metadata table and number of .fcs files do not match up",
+              type = "error"
+            )
+
+          }
+
+        } else {
+          shinyjs::hide("createButton")
+          shinyjs::hide("checkLinking")
+        }
 
       })
 
