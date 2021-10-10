@@ -6,6 +6,8 @@ permanovaTabUI <- function(id) {
 
         h3("Adonis2 by margins"),
 
+        p("Info: Columns with missing values can not be analyzed and will not show up here."),
+
         checkboxGroupButtons(ns("formulaChoose"), label = "Metadata:", choices = c(1,2)),
 
         actionBttn(ns("calculateAD"), "Calculate", style = "simple", color = "primary"),
