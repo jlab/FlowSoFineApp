@@ -3,4 +3,4 @@
 
 ## push docker image to dockerhub
  - sudo docker login -u stefanjanssen
- - sudo docker push stefanjanssen/flowsofine:shinyapp 
+ - sudo docker push stefanjanssen/flowsofine:shinyapp
