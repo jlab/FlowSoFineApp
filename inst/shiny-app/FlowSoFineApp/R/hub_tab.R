@@ -1,3 +1,5 @@
+# Configure the layout of the hub - get access to the different tabs
+
 hubTabUI <- function(id) {
   ns <- NS(id)
   fluidPage(
@@ -41,10 +43,13 @@ hubTabUI <- function(id) {
       )
     ),
 
-    h3("Authors"),
+    h3("Details"),
     fluidRow(
       div(style = "cursor: pointer", id = ns("authors"),
           infoBox("authors", "Authors", icon =  icon("at"), color = "blue")
+      ),
+      div(style = "cursor: pointer", id = ns("help"),
+          infoBox("help", "Help", icon =  icon("question-circle"), color = "blue")
       )
     ),
   )
@@ -77,6 +82,9 @@ hubTabServer <- function(id, parent_session) {
 
       onclick("betadisper", updateTabItems(parent_session, "tabs",
                                            selected = "13_betadisper"))
+
+      onclick("help", updateTabItems(parent_session, "tabs",
+                                           selected = "14_help"))
 
     }
   )

@@ -1,3 +1,5 @@
+# Details about the authors
+
 impressumTabUI <- function(id) {
   ns <- NS(id)
   fluidPage(

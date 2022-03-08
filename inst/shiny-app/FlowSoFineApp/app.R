@@ -1,3 +1,5 @@
+# general layout of the app - connecting the different tabs and specifiying the design
+
 options(shiny.maxRequestSize = 100*1024^2)
 
 ui <- dashboardPage(
@@ -36,7 +38,8 @@ ui <- dashboardPage(
             menuItem("Beta dispersion", tabName = "13_betadisper", icon = icon("spinner")),
             menuItem("PERMANOVA", tabName = "9_permanova", icon = icon("asterisk")),
             menuItem("Details/Export", tabName = "12_detail", icon = icon("search")),
-            menuItem("Authors", tabName = "11_impressum", icon = icon("align-left"))
+            menuItem("Authors", tabName = "11_impressum", icon = icon("align-left")),
+            menuItem("Help", tabName = "14_help", icon = icon("question-circle"))
 
 
     )),
@@ -90,7 +93,8 @@ ui <- dashboardPage(
             tabItem("9_permanova", permanovaTabUI("permanovaTab")),
             tabItem("11_impressum", impressumTabUI("impressumTab")),
             tabItem("12_detail", detailTabUI("detailTab")),
-            tabItem("13_betadisper", betadisperTabUI("betadisperTab"))
+            tabItem("13_betadisper", betadisperTabUI("betadisperTab")),
+            tabItem("14_help", helpTabUI("helpTab"))
         ),
 
     )
@@ -220,6 +224,7 @@ server <- function(input, output, session) {
     nmdsTabServer("nmdsTab", global)
     permanovaTabServer("permanovaTab", global)
     impressumTabServer("impressumTab")
+    helpTabServer("helpTab")
     detailTabServer("detailTab", global)
     betadisperTabServer("betadisperTab", global)
 }
