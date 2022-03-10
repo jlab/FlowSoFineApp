@@ -1,3 +1,5 @@
+# several ways to visualize FSFTemplates or raw FCS files
+
 visualizeTabUI <- function(id) {
   ns <- NS(id)
   fluidPage(
@@ -42,8 +44,6 @@ visualizeTabUI <- function(id) {
         ),
 
         conditionalPanel("input.plotType == 'FlowFrame Plot'", ns = ns,
-                         #selectInput(ns("xChannelF"), "X Channel", choices = c(1,2)),
-                         #selectInput(ns("yChannelF"), "Y Channel", choices = c(1,2)),
                          multiInput(ns("channelInputF"), "Select Channels to plot", choices = c(1,2)),
                          selectInput(ns("transFun"), label = "Transformation:",
                                      choices = list("log10", "asinh", "no transformation"),

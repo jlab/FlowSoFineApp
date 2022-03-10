@@ -1,3 +1,4 @@
+# compute, visualize, and export spacial group comparisons/abundance bins - tscores
 
 tscoresTabUI <- function(id) {
   ns <- NS(id)
@@ -54,7 +55,6 @@ tscoresTabServer <- function(id, global) {
           s <- apply(global$metadata,2, function(x) length(unique(x)) > 1 & !any(table(x) == 1))
           updateSelectInput(session, "metadataGroup",
                             choices = colnames(global$metadata[,s]))
-          #cat(input$indexG)
         }
       })
 
@@ -66,9 +66,8 @@ tscoresTabServer <- function(id, global) {
                     loc$tsPlot <- plotTscores(global$template,
                                     loc$ts[,input$indexG, drop = F],
                                     limits = c(min(loc$ts, na.rm = T),max(loc$ts, na.rm = T))
-                                    )# +
+                                    )
 
-          #   labs(x = global$hexT@xChannel, y = global$hexT@yChannel)
         }
       })
 
@@ -86,7 +85,6 @@ tscoresTabServer <- function(id, global) {
           if(input$textCheck) {
 
             lab = round(loc$ts[,input$indexG], 1)
-            #size = input$fontsize
 
             isolate(
               loc$tsPlot <- loc$tsPlot + geom_text(aes(label = lab),

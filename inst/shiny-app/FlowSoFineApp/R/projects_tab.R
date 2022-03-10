@@ -1,3 +1,5 @@
+# Initial tab. Decide to load or create a new project
+
 
 projectsTabUI <- function(id) {
   ns <- NS(id)
@@ -25,7 +27,6 @@ projectsTabUI <- function(id) {
                          multiple = FALSE,
                          accept = c(".RData"))
              )
-             #shinyDirButton(ns("dirBut"),"select directory", "select directory", style = "visibility: hidden")
 
     )
   )
@@ -39,8 +40,6 @@ projectsTabServer <- function(id, global, parent_session) {
                                                 selected = "2_newProject"))
 
       onclick("clickLoadProj", click("dirBut"))
-
-      #shinyDirChoose(input, "dirBut", roots = getVolumes()())
 
 
       observeEvent(input$dirBut, {
@@ -57,30 +56,12 @@ projectsTabServer <- function(id, global, parent_session) {
 
         global$justLoaded <- TRUE
 
-        # dir <- parseDirPath(roots = getVolumes(), input$dirBut)
-        # global$projectPath <- dir
-        # if (length(dir)) {
-        #
-        #   hexF <- paste0(dir,"/","template.rds")
-        #   infoF <- paste0(dir,"/","info.rds")
-        #
-        #   if(file.exists(hexF)) {
-        #     global$ND <- readRDS(hexF)
-        #   }
-        #
-        #   if(file.exists(infoF)) {
-        #     info <- readRDS(infoF)
-        #     global$title <- info[[1]]
-        #     global$metadata <- info[[2]]
-        #     #global$projectPath <- info[[2]]
-        #   }
 
         runjs("$('header').css('display', '');")
 
         updateTabItems(session = parent_session, "tabs",
                        selected = "4_configureProject")
 
-        #}
       })
 
 

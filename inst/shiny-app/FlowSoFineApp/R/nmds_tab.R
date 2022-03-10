@@ -1,3 +1,5 @@
+# Compute nmds based on the distance matrix
+
 nmdsTabUI <- function(id) {
   ns <- NS(id)
   fluidPage(

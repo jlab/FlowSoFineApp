@@ -1,3 +1,5 @@
+# For creating the FSFTemlate and the distance matrix
+
 configureTabUI <- function(id) {
   ns <- NS(id)
   fluidPage(

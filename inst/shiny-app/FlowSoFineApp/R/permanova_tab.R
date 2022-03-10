@@ -1,3 +1,5 @@
+# compute adonis2 and pw.adonis2 based on distance matrix
+
 permanovaTabUI <- function(id) {
   ns <- NS(id)
   fluidPage(

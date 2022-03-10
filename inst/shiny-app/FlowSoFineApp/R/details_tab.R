@@ -1,21 +1,10 @@
+# Details about the template and distance matrix. Also for importing/exporting
+
 
 detailTabUI <- function(id) {
   ns <- NS(id)
   fluidPage(
     box(title = "Metadata:",
-        # shinyFilesButton(ns('reloadFCS'),
-        #                  label='Reload fcs files',
-        #                  title='Select fcs files',
-        #                  multiple=T),
-
-        # shinyFilesButton(ns('reloadCSV'),
-        #                  label='Reload metadata',
-        #                  title='Please select a csv file',
-        #                  multiple=F),
-        # shinyFilesButton(ns('reloadDist'),
-        #                  label='Overwrite distance matrix',
-        #                  title='Please select a csv file',
-        #                  multiple=F),
         dataTableOutput(ns("metadataTable")),
         downloadButton(ns("metadataDownload"), "Download .csv")
         ),
@@ -47,7 +36,6 @@ detailTabUI <- function(id) {
               multiple = FALSE,
               accept = c(".csv"))
 
-    ##add export buttons
   )
 }
 
@@ -122,30 +110,6 @@ detailTabServer <- function(id, global) {
         }
       )
 
-      # shinyFileChoose(input, "reloadFCS",
-      #                 roots = getVolumes(), filetype = "fcs")
-
-      # shinyFileChoose(input, "reloadCSV",
-      #                 roots = getVolumes(), filetype = "csv")
-
-      # shinyFileChoose(input, "reloadDist",
-      #                 roots = getVolumes(), filetype = "csv")
-
-      # observeEvent(input$reloadFCS, {
-      #   files <- parseFilePaths(roots = getVolumes(), input$reloadFCS)
-      #   if(nrow(files)) {
-      #     global$fcs <- read.flowSet(files$datapath)
-      #
-      #     sendSweetAlert(
-      #       session = session,
-      #       title = "Warning",
-      #       text = "You need to manually recreate your template for this to take effect",
-      #       type = "warning"
-      #     )
-      #
-      #   }
-      # })
-
       observeEvent(input$fcsFiles, {
         req(input$fcsFiles)
 
@@ -166,30 +130,6 @@ detailTabServer <- function(id, global) {
         global$distanceString <- "OVERWRITTEN"
 
       })
-
-      # observeEvent(input$reloadDist, {
-      #
-      #   files <- parseFilePaths(roots = getVolumes(), input$reloadDist)
-      #   if(nrow(files)) {
-      #     global$distM <- as.dist(read.table(files$datapath, sep = ";", header = T, row.names = 1, dec = ","))
-      #     print(typeof(global$distM))
-      #     #global$distM <- as.dist(global$distM)
-      #     global$distanceString <- "OVERWRITTEN"
-      #   }
-      #
-      # })
-
-      # observeEvent(input$reloadCSV, {
-      #
-      #   files <- parseFilePaths(roots = getVolumes(), input$reloadCSV)
-      #   if(nrow(files)) {
-      #     #global$metadataPath <- files$datapath
-      #     global$metadata <- read.table(files$datapath, sep = ";", header = T)
-      #   }
-      #
-      # })
-
-
 
     }
   )

@@ -1,3 +1,5 @@
+# UI and server for computomg betadispersion
+
 
 betadisperTabUI <- function(id) {
   ns <- NS(id)

@@ -1,3 +1,5 @@
+# create a new project - upload required files
+
 newProjectTabUI <- function(id) {
   ns <- NS(id)
   fluidPage(
