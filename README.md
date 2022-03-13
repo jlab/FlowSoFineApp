@@ -16,13 +16,13 @@ with:
 
 ``` r
 install.packages("remotes")
-remotes::install_github("JonasKup/FlowSoFine")
-remotes::install_github("JonasKup/FlowSoFineApp")
+remotes::install_github("jlab/FlowSoFine")
+remotes::install_github("jlab/FlowSoFineApp")
 ```
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+Launch the user interface in R:
 
 ``` r
 library(FlowSoFineApp)
