@@ -24,8 +24,11 @@ newProjectTabUI <- function(id) {
           checkboxInput(ns("csvOptions"), label = "File settings"),
 
           conditionalPanel("input.csvOptions == true", ns = ns,
-            textInput(ns("sepText"), label = "seperator:", value = ";"),
-            textInput(ns("decText"), label = "decimal point:", value = ",")
+            selectInput(ns("sepText"), label = "seperator:",
+                        choices = c("\\t" = "\t", ";", ",", "space" = " "),
+                        selected = ";"),
+            selectInput(ns("decText"), label = "decimal point:", choices = c(",", "."),
+                        selected = ".")
           ),
 
           fileInput(ns("csvFile"), "Choose metadata file (csv, tsv, txt)",
