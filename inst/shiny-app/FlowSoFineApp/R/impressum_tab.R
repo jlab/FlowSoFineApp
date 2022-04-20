@@ -15,7 +15,7 @@ impressumTabUI <- function(id) {
         )
       ),
       column(10,
-        tags$p(tags$b("AG Esser"), style = "margin-left: 10px; margin-top: 15px"),
+        tags$p(tags$b("Prof. Dr. Charlotte Esser"), style = "margin-left: 10px; margin-top: 15px"),
         tags$p(tags$b("Jonas Kupschus"), style = "margin-left: 10px"),
         tags$p(tags$b("Dr. Katrin Hochrath"), style = "margin-left: 10px"),
       )
@@ -31,7 +31,9 @@ impressumTabUI <- function(id) {
         )
       ),
       column(10,
+        tags$p(tags$b("Prof. Dr. Katja Ickstadt"), style = "margin-left: 10px; margin-top: 15px"),
         tags$p(tags$b("Jonathan Rathjens"), style = "margin-left: 10px; margin-top: 15px"),
+        tags$p(tags$b("Carsten Sonntag"), style = "margin-left: 10px; margin-top: 15px")
       )
     ),
     fluidRow(
@@ -46,6 +48,7 @@ impressumTabUI <- function(id) {
       ),
       column(10,
         tags$p(tags$b("Prof. Dr. Stefan Janssen"), style = "margin-left: 10px; margin-top: 15px"),
+        tags$p(tags$b("Andreas Hoek"), style = "margin-left: 10px; margin-top: 15px")
       )
     )
   )
