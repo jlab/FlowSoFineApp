@@ -79,7 +79,7 @@ detailTabServer <- function(id, global) {
           paste0(global$title, "-", "COUNTS-", toString(colnames(global$template@coords)), "-", Sys.Date(), ".csv")
         },
         content = function(con) {
-          write.csv2(global$template@counts, con)
+          write.csv(global$template@counts, con)
         }
       )
 
@@ -88,7 +88,7 @@ detailTabServer <- function(id, global) {
           paste0(global$title, "-", "COORDINATES-", toString(colnames(global$template@coords)), "-", Sys.Date(), ".csv")
         },
         content = function(con) {
-          write.csv2(global$template@coords, con)
+          write.csv(global$template@coords, con)
         }
       )
 
@@ -126,7 +126,7 @@ detailTabServer <- function(id, global) {
 
       observeEvent(input$distFile, {
 
-        global$distM <- as.dist(read.table(input$distFile$datapath, sep = ";", header = T, row.names = 1, dec = ","))
+        global$distM <- as.dist(read.table(input$distFile$datapath, sep = ";", header = T, row.names = 1, dec = "."))
         global$distanceString <- "OVERWRITTEN"
 
       })
