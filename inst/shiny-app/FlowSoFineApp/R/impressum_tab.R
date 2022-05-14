@@ -15,7 +15,8 @@ impressumTabUI <- function(id) {
         )
       ),
       column(10,
-        tags$p(tags$b("Prof. Dr. Charlotte Esser"), style = "margin-left: 10px; margin-top: 15px"),
+        tags$p(tags$b("FlowSoFine is a registered trademark by IUF"), style = "margin-left: 10px; margin-top: 15px"),
+        tags$p(tags$b("Prof. Dr. Charlotte Esser (General questions - Charlotte.Esser@IUF-Duesseldorf.de)"), style = "margin-left: 10px; margin-top: 15px"),
         tags$p(tags$b("Jonas Kupschus"), style = "margin-left: 10px"),
         tags$p(tags$b("Dr. Katrin Hochrath"), style = "margin-left: 10px"),
       )
@@ -47,8 +48,8 @@ impressumTabUI <- function(id) {
         )
       ),
       column(10,
-        tags$p(tags$b("Prof. Dr. Stefan Janssen"), style = "margin-left: 10px; margin-top: 15px"),
-        tags$p(tags$b("Andreas Hoek"), style = "margin-left: 10px; margin-top: 15px")
+        tags$p(tags$b("Prof. Dr. Stefan Janssen (Technical questions - stefan.janssen@computational.bio.uni-giessen.de)"), style = "margin-left: 10px; margin-top: 15px"),
+        tags$p(tags$b("Dr. Andreas Hoek"), style = "margin-left: 10px; margin-top: 15px")
       )
     )
   )
